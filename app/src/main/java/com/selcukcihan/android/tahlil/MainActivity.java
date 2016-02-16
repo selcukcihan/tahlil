@@ -1,7 +1,10 @@
 package com.selcukcihan.android.tahlil;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
@@ -9,14 +12,43 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TestCredentialsDialogFragment.TestCredentialsDialogListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        showTestCredentialsDialog();
+    }
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog, List<TestResult> results) {
+        ListView listView = (ListView) findViewById(R.id.list);
 
-        new HttpStuffTask().execute("http://labim.ihs.gov.tr/labim/HastaTetkikSonucSorgulama.aspx", "http://labim.ihs.gov.tr/labim/HastaTetkikSonucYazdir.aspx");
+        // Defined Array values to show in ListView
+        String[] values = new String[results.size()];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = results.get(i).toString();
+        }
+        // Define a new Adapter
+        // First parameter - Context
+        // Second parameter - Layout for the row
+        // Third parameter - ID of the TextView to which the data is written
+        // Forth - the Array of data
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+
+        // Assign adapter to ListView
+        listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+    }
+
+    public void showTestCredentialsDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = new TestCredentialsDialogFragment();
+        dialog.show(getSupportFragmentManager(), "TestCredentialsDialogFragment");
     }
 }

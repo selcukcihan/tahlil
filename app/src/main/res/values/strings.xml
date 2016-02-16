@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Tahlil Sonuçları</string>
+    <string name="tckn">T.C. kimlik numarası</string>
+    <string name="registration_number">Kayıt numarası</string>
+    <string name="cancel">İptal</string>
+    <string name="query">Sonuçları Getir</string>
 </resources>
