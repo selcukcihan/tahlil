@@ -1,7 +1,11 @@
 package com.selcukcihan.android.tahlil;
 
+import junit.framework.Test;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -32,12 +36,30 @@ public class HttpCommunicator {
     private HashMap<String, String> mCookies;
 
     public List<TestResult> fetch(String postURL, String resultURL, HashMap<String, String> postParams) throws IOException {
+        List<TestResult> results = new LinkedList<>();
+        results.add(new TestResult("HCG", "mg", 5.0f, 2.0f, 9.0f));
+        results.add(new TestResult("ABC", "mg", 25.0f, 20.0f, 39.0f));
+        results.add(new TestResult("GLUKOZ", "mg", 15.0f, 7.0f, 20.0f));
+        return results;
+/*
         String response = performGetCall(postURL);
         parseAndExtractASPStuff(response);
         performPostCall(postURL, postParams);
-        String response2 = performGetCall(resultURL);
+        String finalResponse = performGetCall(resultURL);
 
-        List<TestResult> results = new LinkedList<>();
+        List<TestResult> results = parseResponse(finalResponse);
+        return results;*/
+    }
+
+    private List<TestResult> parseResponse(String response) {
+        Document doc = Jsoup.parse(response);
+        Elements rows = doc.select("table.tson").select("tr");
+        List<TestResult> results = new LinkedList<TestResult>();
+        for (Element element : rows) {
+            System.out.println(element.previousElementSibling().text()
+                    + ": " + element.text());
+            results.add(new TestResult(element.text().toString(), "ms", 10.0f, 5.0f, 15.0f));
+        }
         return results;
     }
 
