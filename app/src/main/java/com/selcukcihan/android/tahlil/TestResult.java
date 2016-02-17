@@ -35,11 +35,11 @@ public class TestResult implements Parcelable {
     }
 
     public String getName() {
-        return mName;
+        return String.format("%1$-25s", mName);
     }
 
     public String getValueString() {
-        return mValue + " (" + mLowerBound + " - " + mUpperBound + ")";
+        return mValue + " " + mUnit + " (" + mLowerBound + " - " + mUpperBound + ")";
     }
 
     public boolean Normal () { return mValue >= mLowerBound && mValue <= mUpperBound; }

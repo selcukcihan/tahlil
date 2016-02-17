@@ -5,31 +5,59 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import java.net.HttpCookie;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements TestCredentialsDialogFragment.TestCredentialsDialogListener {
 
     private TestResultFragment mFragment;
+    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        showTestCredentialsDialog();
+        mTextView = ((TextView) findViewById(R.id.explanation_text));
+        mTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+        if (savedInstanceState == null) {
+            showTestCredentialsDialog();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.menu_item_new_query);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_new_query:
+                showTestCredentialsDialog();
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void showInFragment (List<TestResult> results) {
-        mFragment = TestResultFragment.newInstance(results);
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.list, mFragment);
+        mFragment = TestResultFragment.newInstance(results);
+        fragmentTransaction.replace(R.id.list, mFragment);
         fragmentTransaction.commit();
     }
     @Override
@@ -59,10 +87,13 @@ public class MainActivity extends AppCompatActivity implements TestCredentialsDi
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
+        if (mFragment == null) {
+            mTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     public void showTestCredentialsDialog() {
-        // Create an instance of the dialog fragment and show it
+        mTextView.setVisibility(View.INVISIBLE);
         DialogFragment dialog = new TestCredentialsDialogFragment();
         dialog.show(getSupportFragmentManager(), "TestCredentialsDialogFragment");
     }

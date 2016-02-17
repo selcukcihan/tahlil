@@ -1,16 +1,20 @@
 package com.selcukcihan.android.tahlil;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class TestResultRecyclerViewAdapter extends RecyclerView.Adapter<TestResultRecyclerViewAdapter.ViewHolder> {
 
     private final List<TestResult> mValues;
+    private Integer mDefaultBackgroundColor = null;
     //private final TestResultFragment.OnListFragmentInteractionListener mListener;
 
     public TestResultRecyclerViewAdapter(List<TestResult> items/*, TestResultFragment.OnListFragmentInteractionListener listener*/) {
@@ -27,6 +31,16 @@ public class TestResultRecyclerViewAdapter extends RecyclerView.Adapter<TestResu
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        if (mDefaultBackgroundColor == null) {
+            mDefaultBackgroundColor = holder.mView.getDrawingCacheBackgroundColor();
+        }
+        if (mValues.get(position).Normal()) {
+            //holder.mIdView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.circle, 0, 0, 0);
+            holder.mView.setBackgroundColor(mDefaultBackgroundColor);
+        } else {
+            //holder.mIdView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.circle_abnormal, 0, 0, 0);
+            holder.mView.setBackgroundColor(ContextCompat.getColor(holder.mView.getContext(), R.color.abnormalTest));
+        }
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getName());
         holder.mContentView.setText(mValues.get(position).getValueString());
@@ -57,8 +71,8 @@ public class TestResultRecyclerViewAdapter extends RecyclerView.Adapter<TestResu
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = (TextView) view.findViewById(R.id.test_name);
+            mContentView = (TextView) view.findViewById(R.id.test_content);
         }
 
         @Override

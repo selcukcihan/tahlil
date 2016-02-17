@@ -36,30 +36,42 @@ public class HttpCommunicator {
     private HashMap<String, String> mCookies;
 
     public List<TestResult> fetch(String postURL, String resultURL, HashMap<String, String> postParams) throws IOException {
+        /*
         List<TestResult> results = new LinkedList<>();
         results.add(new TestResult("HCG", "mg", 5.0f, 2.0f, 9.0f));
         results.add(new TestResult("ABC", "mg", 25.0f, 20.0f, 39.0f));
-        results.add(new TestResult("GLUKOZ", "mg", 15.0f, 7.0f, 20.0f));
-        return results;
-/*
+        results.add(new TestResult("GLUKOZ", "ug", 15.0f, 7.0f, 20.0f));
+        return results;*/
+
         String response = performGetCall(postURL);
         parseAndExtractASPStuff(response);
         performPostCall(postURL, postParams);
         String finalResponse = performGetCall(resultURL);
 
         List<TestResult> results = parseResponse(finalResponse);
-        return results;*/
+        return results;
     }
 
     private List<TestResult> parseResponse(String response) {
         Document doc = Jsoup.parse(response);
         Elements rows = doc.select("table.tson").select("tr");
         List<TestResult> results = new LinkedList<TestResult>();
+
+        for (int i = 2; i < rows.size(); i++) {
+            String name = rows.get(i).select("td").get(0).text();
+            Float value = Float.parseFloat(rows.get(i).select("td").get(1).text().replaceAll("[^\\d.]", ""));
+            String unit = rows.get(i).select("td").get(2).text();
+            String bounds[] = rows.get(i).select("td").get(3).text().split("-");
+            Float lowerBound = Float.parseFloat(bounds[0]);
+            Float upperBound = Float.parseFloat(bounds[1]);
+            results.add(new TestResult(name, unit, value, lowerBound, upperBound));
+        }
+/*
         for (Element element : rows) {
             System.out.println(element.previousElementSibling().text()
                     + ": " + element.text());
             results.add(new TestResult(element.text().toString(), "ms", 10.0f, 5.0f, 15.0f));
-        }
+        }*/
         return results;
     }
 

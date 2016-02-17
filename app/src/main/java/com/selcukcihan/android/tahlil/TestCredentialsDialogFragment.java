@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 
 import java.util.List;
 
@@ -70,8 +71,15 @@ public class TestCredentialsDialogFragment extends DialogFragment implements Htt
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         TestCredentialsDialogFragment.this.getDialog().cancel();
+                        mListener.onDialogNegativeClick(TestCredentialsDialogFragment.this);
                     }
                 });
         return builder.create();
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        mListener.onDialogNegativeClick(TestCredentialsDialogFragment.this);
     }
 }

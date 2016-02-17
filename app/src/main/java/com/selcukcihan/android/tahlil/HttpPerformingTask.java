@@ -20,6 +20,8 @@ import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +51,23 @@ public class HttpPerformingTask extends AsyncTask<String, Void, List<TestResult>
 
             HttpCommunicator communicator = new HttpCommunicator();
 
-            return communicator.fetch("http://labim.ihs.gov.tr/labim/HastaTetkikSonucSorgulama.aspx",
+            List<TestResult> results = communicator.fetch("http://labim.ihs.gov.tr/labim/HastaTetkikSonucSorgulama.aspx",
                     "http://labim.ihs.gov.tr/labim/HastaTetkikSonucYazdir.aspx",
                     postParams);
+
+            Collections.sort(results, new Comparator<TestResult>() {
+                @Override
+                public int compare(TestResult r1, TestResult r2) {
+                    if (!r1.Normal() && !r2.Normal()) {
+                        return r1.getName().compareTo(r2.getName());
+                    } else if (!r2.Normal()) {
+                        return 1;
+                    } else {
+                        return r1.getName().compareTo(r2.getName());
+                    }
+                }
+            });
+            return results;
         } catch (Exception ex) {
             mException = ex;
             return null;

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,17 +15,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
 public class TestResultFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String RESULTS_PARAMETER = "com.selcukcihan.android.tahlil.RESULTS_PARAMETER";
-    private static final int COLUMN_COUNT = 2;
 
     //private OnListFragmentInteractionListener mListener;
     private ArrayList<TestResult> mResults;
@@ -62,7 +56,9 @@ public class TestResultFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new GridLayoutManager(context, COLUMN_COUNT));
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
+
             //recyclerView.setAdapter(new TestResultRecyclerViewAdapter(mResults, mListener));
             recyclerView.setAdapter(new TestResultRecyclerViewAdapter(mResults));
         }
