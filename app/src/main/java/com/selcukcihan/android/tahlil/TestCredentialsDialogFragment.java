@@ -7,7 +7,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 
 import java.util.List;
 
@@ -18,15 +19,21 @@ public class TestCredentialsDialogFragment extends DialogFragment implements Htt
 
     @Override
     public void onCompleted(List<TestResult> results) {
-        mListener.onDialogPositiveClick(this, results);
+        mListener.onDialogCompleted(this, results);
+    }
+
+    @Override
+    public void onFailure(String message) {
+        mListener.onFailure(message);
     }
 
     /* The activity that creates an instance of this dialog fragment must
         * implement this interface in order to receive event callbacks.
         * Each method passes the DialogFragment in case the host needs to query it. */
     public interface TestCredentialsDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog, List<TestResult> results);
+        public void onDialogCompleted(DialogFragment dialog, List<TestResult> results);
         public void onDialogNegativeClick(DialogFragment dialog);
+        public void onFailure(String message);
     }
 
     // Use this instance of the interface to deliver action events
@@ -63,8 +70,8 @@ public class TestCredentialsDialogFragment extends DialogFragment implements Htt
                     public void onClick(DialogInterface dialog, int id) {
                         HttpPerformingTask task = new HttpPerformingTask();
                         task.attach(TestCredentialsDialogFragment.this);
-
-                        task.execute("32536157248", "7632888");
+                        task.execute(((AutoCompleteTextView ) getDialog().findViewById(R.id.tckn)).getText().toString(),
+                                ((AutoCompleteTextView) getDialog().findViewById(R.id.registration_code)).getText().toString());
 
                     }
                 })

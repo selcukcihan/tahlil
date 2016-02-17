@@ -8,7 +8,6 @@ import android.os.Parcelable;
  */
 public class TestResult implements Parcelable {
 
-
     private String mName;
     private String mUnit;
     private Float mValue;

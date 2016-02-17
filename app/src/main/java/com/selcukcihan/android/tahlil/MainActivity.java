@@ -1,17 +1,20 @@
 package com.selcukcihan.android.tahlil;
 
+import android.content.Context;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -61,8 +64,22 @@ public class MainActivity extends AppCompatActivity implements TestCredentialsDi
         fragmentTransaction.commit();
     }
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog, List<TestResult> results) {
+    public void onDialogCompleted(DialogFragment dialog, List<TestResult> results) {
         showInFragment(results);
+    }
+
+    @Override
+    public void onFailure(String message) {
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER | Gravity.LEFT, 0, 0);
+        toast.show();
+        if (mFragment != null) {
+            FragmentManager fragmentManager = this.getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.remove(mFragment);
+            fragmentTransaction.commit();
+        }
+        mTextView.setVisibility(View.VISIBLE);
     }
 
     public void simpleShow(List<TestResult> results) {

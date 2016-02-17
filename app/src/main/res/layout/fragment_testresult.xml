@@ -14,8 +14,9 @@
 -->
     <TextView
         android:id="@+id/test_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:layout_margin="@dimen/text_margin"
         android:text="deneme"
         android:textSize="12dp"
@@ -23,8 +24,9 @@
 
     <TextView
         android:id="@+id/test_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:layout_margin="@dimen/text_margin"
         android:text="menemen"
         android:textSize="12dp"
