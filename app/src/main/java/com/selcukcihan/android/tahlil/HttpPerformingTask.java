@@ -32,7 +32,7 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Created by SELCUKCI on 16.2.2016.
  */
-public class HttpPerformingTask extends AsyncTask<String, Void, List<TestResult>> {
+public class HttpPerformingTask extends AsyncTask<String, Void, TestResultCollection> {
 
     private ProgressDialog mDialog;
     private String mTCKN;
@@ -40,8 +40,8 @@ public class HttpPerformingTask extends AsyncTask<String, Void, List<TestResult>
     private String mNotFoundMessage;
 
     public interface HttpPerformingTaskListener {
-        public void onCompleted(List<TestResult> results);
-        public void onFailure(String message);
+        void onCompleted(TestResultCollection collection);
+        void onFailure(String message);
     }
 
     private TestCredentialsDialogFragment mListener;
@@ -52,7 +52,7 @@ public class HttpPerformingTask extends AsyncTask<String, Void, List<TestResult>
     }
 
     private Exception mException;
-    protected List<TestResult> doInBackground(String... params) {
+    protected TestResultCollection doInBackground(String... params) {
         try {
             mTCKN = params[0];
             mRegistrationCode = params[1];
@@ -82,12 +82,12 @@ public class HttpPerformingTask extends AsyncTask<String, Void, List<TestResult>
     public Exception getException() { return mException; }
 
     @Override
-    protected void onPostExecute(List<TestResult> results) {
+    protected void onPostExecute(TestResultCollection collection) {
         if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
         }
-        if (results != null && results.size() > 0) {
-            Collections.sort(results, new Comparator<TestResult>() {
+        if (collection != null && collection.Results != null && collection.Results.size() > 0) {
+            Collections.sort(collection.Results, new Comparator<TestResult>() {
                 @Override
                 public int compare(TestResult r1, TestResult r2) {
                     if (!r1.Normal() && !r2.Normal()) {
@@ -102,9 +102,9 @@ public class HttpPerformingTask extends AsyncTask<String, Void, List<TestResult>
                     }
                 }
             });
-            mListener.onCompleted(results);
+            mListener.onCompleted(collection);
         } else {
-            if (results == null) {
+            if (collection == null || collection.Results == null) {
                 mListener.onFailure(mException.getLocalizedMessage());
             } else {
                 mListener.onFailure(String.format(mNotFoundMessage, mTCKN, mRegistrationCode));

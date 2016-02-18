@@ -56,16 +56,16 @@ public class MainActivity extends AppCompatActivity implements TestCredentialsDi
         }
     }
 
-    public void showInFragment (List<TestResult> results) {
+    public void showInFragment (TestResultCollection collection) {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        mFragment = TestResultFragment.newInstance(results);
+        mFragment = TestResultFragment.newInstance(collection);
         fragmentTransaction.replace(R.id.list, mFragment);
         fragmentTransaction.commit();
     }
     @Override
-    public void onDialogCompleted(DialogFragment dialog, List<TestResult> results) {
-        showInFragment(results);
+    public void onDialogCompleted(DialogFragment dialog, TestResultCollection collection) {
+        showInFragment(collection);
     }
 
     @Override

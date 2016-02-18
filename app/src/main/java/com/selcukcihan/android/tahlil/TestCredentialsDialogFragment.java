@@ -18,8 +18,8 @@ import java.util.List;
 public class TestCredentialsDialogFragment extends DialogFragment implements HttpPerformingTask.HttpPerformingTaskListener {
 
     @Override
-    public void onCompleted(List<TestResult> results) {
-        mListener.onDialogCompleted(this, results);
+    public void onCompleted(TestResultCollection collection) {
+        mListener.onDialogCompleted(this, collection);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class TestCredentialsDialogFragment extends DialogFragment implements Htt
         * implement this interface in order to receive event callbacks.
         * Each method passes the DialogFragment in case the host needs to query it. */
     public interface TestCredentialsDialogListener {
-        public void onDialogCompleted(DialogFragment dialog, List<TestResult> results);
+        public void onDialogCompleted(DialogFragment dialog, TestResultCollection collection);
         public void onDialogNegativeClick(DialogFragment dialog);
         public void onFailure(String message);
     }

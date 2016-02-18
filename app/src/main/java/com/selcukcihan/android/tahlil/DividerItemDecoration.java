@@ -26,15 +26,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         styledAttributes.recycle();
     }
 
-    /**
-     * Custom divider will be used
-     */
-    public DividerItemDecoration(Context context, int resId) {
-        mDivider = ContextCompat.getDrawable(context, resId);
-    }
-
     @Override
-    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
 

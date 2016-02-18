@@ -35,7 +35,7 @@ public class HttpCommunicator {
     private static final String COOKIE_KEYS [] = {"__EVENTARGUMENT", "__VIEWSTATE", "__VIEWSTATEGENERATOR", "__EVENTVALIDATION"};
     private HashMap<String, String> mCookies;
 
-    public List<TestResult> fetch(String postURL, String resultURL, HashMap<String, String> postParams) throws IOException {
+    public TestResultCollection fetch(String postURL, String resultURL, HashMap<String, String> postParams) throws IOException {
         /*
         List<TestResult> results = new LinkedList<>();
         results.add(new TestResult("HCG", "mg", 5.0f, 2.0f, 9.0f));
@@ -48,14 +48,13 @@ public class HttpCommunicator {
         performPostCall(postURL, postParams);
         String finalResponse = performGetCall(resultURL);
 
-        List<TestResult> results = parseResponse(finalResponse);
-        return results;
+        return parseResponse(finalResponse);
     }
 
-    private List<TestResult> parseResponse(String response) {
+    private TestResultCollection parseResponse(String response) {
         Document doc = Jsoup.parse(response);
         Elements rows = doc.select("table.tson").select("tr");
-        List<TestResult> results = new LinkedList<TestResult>();
+        TestResultCollection collection = new TestResultCollection();
 
         for (int i = 2; i < rows.size(); i++) {
             String name = rows.get(i).select("td").get(0).text();
@@ -64,7 +63,25 @@ public class HttpCommunicator {
             String bounds[] = rows.get(i).select("td").get(3).text().split("-");
             Float lowerBound = Float.parseFloat(bounds[0]);
             Float upperBound = Float.parseFloat(bounds[1]);
-            results.add(new TestResult(name, unit, value, lowerBound, upperBound));
+            collection.Results.add(new TestResult(name, unit, value, lowerBound, upperBound));
+        }
+        try {
+            collection.TestDate = doc.select("#lblTable").get(0).previousElementSibling().text().split(":")[1].replaceAll("\\s+","");
+        } catch (Exception ex) {
+            ;
+        }
+
+        try {
+            Elements meta = doc.select("#lblTable").select("td");
+            if (meta.size() > 9) {
+                collection.TCKN = meta.get(1).text();
+                collection.Name = meta.get(3).text();
+                collection.Surname = meta.get(5).text();
+                collection.Gender = meta.get(7).text();
+                collection.BirthDate = meta.get(9).text();
+            }
+        } catch (Exception ex) {
+            ;
         }
 /*
         for (Element element : rows) {
@@ -72,7 +89,7 @@ public class HttpCommunicator {
                     + ": " + element.text());
             results.add(new TestResult(element.text().toString(), "ms", 10.0f, 5.0f, 15.0f));
         }*/
-        return results;
+        return collection;
     }
 
     private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {

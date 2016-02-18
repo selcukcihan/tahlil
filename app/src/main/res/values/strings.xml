@@ -9,4 +9,5 @@
         Tahlil sonuçları, <a href="http://labim.ihs.gov.tr/labim/HastaTetkikSonucSorgulama.aspx">İstanbul Halk Sağlığı Müdürlüğü</a> adresinden çekilmektedir.</string>
     <string name="waiting">Tahlil sonuçları yükleniyor.</string>
     <string name="not_found">Girdiğiniz T.C. kimlik no (%1$s) ve kayıt no (%2$s) ile bir sonuç bulunamamıştır.</string>
+    <string name="results_test_date">%1$s tarihli sonuçlar:</string>
 </resources>
